@@ -9,6 +9,7 @@ const errorMultiEl = document.getElementById("error-multi");
 const errorCardEl = document.getElementById("error-card");
 const errorMessageEl = document.getElementById("error-message");
 const footerMetaEl = document.getElementById("footer-meta");
+const setupCardEl = document.getElementById("setup-card");
 const btnRefresh = document.getElementById("btn-refresh");
 
 function formatDate(isoOrRss) {
@@ -58,7 +59,14 @@ function createNewsCard(item, index, columnClass) {
   const meta = document.createElement("p");
   meta.className = "news-meta";
 
-  if (source) {
+  if (item.provider) {
+    const providerSpan = document.createElement("span");
+    providerSpan.className = `news-provider news-provider--${item.provider}`;
+    providerSpan.textContent = item.provider === "naver" ? "네이버" : "Google";
+    meta.appendChild(providerSpan);
+  }
+
+  if (source && source !== "네이버 뉴스" && source !== "Google News") {
     const sourceSpan = document.createElement("span");
     sourceSpan.className = "news-source";
     sourceSpan.textContent = source;
@@ -140,11 +148,12 @@ function showNews(data) {
     (data.smallCinema.items?.length || 0) + (data.multiplex.items?.length || 0);
   statusEl.textContent = `총 ${total}건 · ${formatDate(data.fetchedAt)} 기준`;
   footerMetaEl.textContent = `데이터 출처: ${data.source} · 작은영화관 · 영화관`;
+  setupCardEl.hidden = Boolean(data.naverEnabled);
 }
 
 async function loadNews() {
   setLoading(true);
-  statusEl.textContent = "Google 뉴스에서 검색 중…";
+  statusEl.textContent = "Google·네이버 뉴스 검색 중…";
   statusEl.classList.remove("status--error");
   errorCardEl.hidden = true;
   newsBoardEl.hidden = true;

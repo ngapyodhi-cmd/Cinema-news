@@ -6,27 +6,27 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3456;
 const MAX_ITEMS = 10;
+const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID;
+const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET;
 
 const FEEDS = {
   smallCinema: {
     id: "smallCinema",
     label: "작은영화관",
-    query: '작은영화관 OR "지자체 영화관"',
+    googleQuery: '작은영화관 OR "지자체 영화관"',
+    naverQueries: ["작은영화관", "지자체 영화관"],
   },
   multiplex: {
     id: "multiplex",
     label: "영화관",
-    query:
+    googleQuery:
       '(멀티플렉스 OR 영화관 OR multiflex) -"작은영화관" -"지자체 영화관"',
+    naverQueries: ["멀티플렉스", "영화관"],
     excludeSmallCinema: true,
   },
 };
 
 const SMALL_CINEMA_PATTERN = /작은\s*영화관|지자체\s*영화관/i;
-
-function excludeSmallCinemaArticles(items) {
-  return items.filter((item) => !SMALL_CINEMA_PATTERN.test(item.title));
-}
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -42,6 +42,10 @@ const FETCH_HEADERS = {
   Accept: "application/rss+xml, application/xml, text/xml, */*",
 };
 
+function isNaverConfigured() {
+  return Boolean(NAVER_CLIENT_ID && NAVER_CLIENT_SECRET);
+}
+
 function rssUrl(query) {
   return `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=ko&gl=KR&ceid=KR:ko`;
 }
@@ -55,6 +59,10 @@ function decodeXml(text) {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .trim();
+}
+
+function stripHtml(text) {
+  return decodeXml(text.replace(/<[^>]+>/g, ""));
 }
 
 function extractTag(block, tag) {
@@ -76,7 +84,13 @@ function parseRss(xml) {
     const source = extractTag(block, "source");
 
     if (title && link) {
-      items.push({ title, link, pubDate, source: source || null });
+      items.push({
+        title,
+        link,
+        pubDate,
+        source: source || "Google News",
+        provider: "google",
+      });
     }
   }
 
@@ -92,6 +106,90 @@ function sortByNewest(items) {
     if (Number.isNaN(tb)) return -1;
     return tb - ta;
   });
+}
+
+function dedupeItems(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = (item.link || item.title).trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function excludeSmallCinemaArticles(items) {
+  return items.filter((item) => !SMALL_CINEMA_PATTERN.test(item.title));
+}
+
+async function fetchGoogleNews(googleQuery) {
+  const response = await fetch(rssUrl(googleQuery), { headers: FETCH_HEADERS });
+  if (!response.ok) return [];
+  const xml = await response.text();
+  return parseRss(xml);
+}
+
+async function fetchNaverNews(searchQuery) {
+  if (!isNaverConfigured()) return [];
+
+  const url = new URL("https://openapi.naver.com/v1/search/news.json");
+  url.searchParams.set("query", searchQuery);
+  url.searchParams.set("display", String(MAX_ITEMS));
+  url.searchParams.set("sort", "date");
+
+  const response = await fetch(url, {
+    headers: {
+      "X-Naver-Client-Id": NAVER_CLIENT_ID,
+      "X-Naver-Client-Secret": NAVER_CLIENT_SECRET,
+    },
+  });
+
+  if (!response.ok) return [];
+
+  const data = await response.json();
+  if (!Array.isArray(data.items)) return [];
+
+  return data.items
+    .map((item) => ({
+      title: stripHtml(item.title),
+      link: item.link || item.originallink,
+      pubDate: item.pubDate,
+      source: "네이버 뉴스",
+      provider: "naver",
+    }))
+    .filter((item) => item.title && item.link);
+}
+
+async function fetchCategoryFeed({ id, label, googleQuery, naverQueries, excludeSmallCinema }) {
+  const naverFetches = isNaverConfigured()
+    ? naverQueries.map((q) => fetchNaverNews(q))
+    : [];
+
+  const [googleItems, ...naverGroups] = await Promise.all([
+    fetchGoogleNews(googleQuery),
+    ...naverFetches,
+  ]);
+
+  let items = [...googleItems, ...naverGroups.flat()];
+
+  if (excludeSmallCinema) {
+    items = excludeSmallCinemaArticles(items);
+  }
+
+  items = dedupeItems(sortByNewest(items)).slice(0, MAX_ITEMS);
+
+  if (items.length === 0) {
+    return {
+      id,
+      label,
+      error: isNaverConfigured()
+        ? "검색 결과가 없습니다."
+        : "검색 결과가 없습니다. (네이버 API 키 미설정 시 Google만 검색)",
+      items: [],
+    };
+  }
+
+  return { id, label, items };
 }
 
 function sendJson(res, status, body) {
@@ -126,34 +224,11 @@ function serveStatic(res, urlPath) {
   });
 }
 
-async function fetchFeed({ id, label, query, excludeSmallCinema = false }) {
-  const response = await fetch(rssUrl(query), { headers: FETCH_HEADERS });
-
-  if (!response.ok) {
-    return { id, label, query, error: "Google News RSS를 가져오지 못했습니다.", items: [] };
-  }
-
-  const xml = await response.text();
-  let items = sortByNewest(parseRss(xml));
-
-  if (excludeSmallCinema) {
-    items = excludeSmallCinemaArticles(items);
-  }
-
-  items = items.slice(0, MAX_ITEMS);
-
-  if (items.length === 0) {
-    return { id, label, query, error: "검색 결과가 없습니다.", items: [] };
-  }
-
-  return { id, label, query, items };
-}
-
 async function handleNewsApi(res) {
   try {
     const [smallCinema, multiplex] = await Promise.all([
-      fetchFeed(FEEDS.smallCinema),
-      fetchFeed(FEEDS.multiplex),
+      fetchCategoryFeed(FEEDS.smallCinema),
+      fetchCategoryFeed(FEEDS.multiplex),
     ]);
 
     const hasAny = smallCinema.items.length > 0 || multiplex.items.length > 0;
@@ -163,8 +238,11 @@ async function handleNewsApi(res) {
       return;
     }
 
+    const naverEnabled = isNaverConfigured();
+
     sendJson(res, 200, {
-      source: "Google News",
+      source: naverEnabled ? "Google News · 네이버 뉴스" : "Google News",
+      naverEnabled,
       fetchedAt: new Date().toISOString(),
       smallCinema,
       multiplex,
@@ -187,4 +265,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`영화관 뉴스 앱: port ${PORT}`);
+  console.log(`네이버 뉴스 API: ${isNaverConfigured() ? "사용" : "미설정"}`);
 });

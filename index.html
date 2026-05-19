@@ -15,11 +15,11 @@
 
   <div class="app">
     <header class="header">
-      <p class="eyebrow">Google News</p>
+      <p class="eyebrow">Google News · 네이버 뉴스</p>
       <h1>영화관 뉴스</h1>
       <p class="subtitle">
         왼쪽 <strong>작은영화관</strong>, 오른쪽 <strong>영화관</strong> 관련 최신 기사를
-        각 <strong>10건</strong>씩 불러옵니다.
+        Google·네이버에서 합쳐 각 <strong>10건</strong>씩 표시합니다.
       </p>
     </header>
 
@@ -55,6 +55,18 @@
         <p class="column-error" id="error-multi" hidden></p>
       </section>
     </div>
+
+    <section class="setup-card" id="setup-card" hidden>
+      <h2>네이버 뉴스 연동 (선택)</h2>
+      <p>API 키를 설정하면 Google과 함께 네이버 뉴스도 불러옵니다.</p>
+      <ol>
+        <li><a href="https://developers.naver.com/apps/#/register" target="_blank" rel="noopener noreferrer">네이버 개발자 센터</a>에서 앱 등록</li>
+        <li><strong>검색</strong> API 사용 · Client ID·Secret 발급</li>
+        <li>Render → <strong>Environment</strong>에 아래 변수 추가 후 재배포</li>
+      </ol>
+      <pre class="env-sample">NAVER_CLIENT_ID=발급_ID
+NAVER_CLIENT_SECRET=발급_Secret</pre>
+    </section>
 
     <section class="error-card" id="error-card" hidden>
       <h2>불러오기 실패</h2>

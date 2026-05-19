@@ -350,6 +350,63 @@ h1 {
   opacity: 0.5;
 }
 
+.setup-card {
+  padding: 1.25rem 1.35rem;
+  background: rgba(3, 199, 90, 0.08);
+  border: 1px solid rgba(3, 199, 90, 0.3);
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+}
+
+.setup-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #69db7c;
+}
+
+.setup-card p,
+.setup-card ol {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.setup-card ol {
+  margin-top: 0.75rem;
+  padding-left: 1.2rem;
+}
+
+.setup-card a {
+  color: #69db7c;
+}
+
+.env-sample {
+  margin: 0.85rem 0 0;
+  padding: 0.75rem;
+  font-family: Consolas, monospace;
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.news-provider {
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.news-provider--google {
+  background: rgba(232, 184, 74, 0.2);
+  color: var(--accent);
+}
+
+.news-provider--naver {
+  background: rgba(3, 199, 90, 0.2);
+  color: #69db7c;
+}
+
 .error-card {
   padding: 1.25rem 1.35rem;
   background: rgba(196, 61, 74, 0.1);
