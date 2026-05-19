@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영화관 뉴스 · 작은영화관 &amp; 영화관</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-grain" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="header">
+      <p class="eyebrow">Google News</p>
+      <h1>영화관 뉴스</h1>
+      <p class="subtitle">
+        왼쪽 <strong>작은영화관</strong>, 오른쪽 <strong>영화관</strong> 관련 최신 기사를
+        각 <strong>10건</strong>씩 불러옵니다.
+      </p>
+    </header>
+
+    <section class="toolbar" aria-label="검색 도구">
+      <div class="query-badges">
+        <span class="query-badge query-badge--small">작은영화관</span>
+        <span class="query-badge query-badge--multi">영화관</span>
+      </div>
+      <button type="button" class="btn" id="btn-refresh" aria-label="뉴스 새로고침">
+        <span class="btn-icon" aria-hidden="true">↻</span>
+        새로고침
+      </button>
+    </section>
+
+    <p class="status" id="status" role="status" aria-live="polite">뉴스를 불러오는 중…</p>
+
+    <div class="news-board" id="news-board" hidden>
+      <section class="news-column news-column--small" aria-labelledby="col-small-title">
+        <header class="column-header">
+          <h2 id="col-small-title">작은영화관</h2>
+          <p class="column-count" id="count-small"></p>
+        </header>
+        <ol class="news-list" id="news-list-small"></ol>
+        <p class="column-error" id="error-small" hidden></p>
+      </section>
+
+      <section class="news-column news-column--multi" aria-labelledby="col-multi-title">
+        <header class="column-header">
+          <h2 id="col-multi-title">영화관</h2>
+          <p class="column-count" id="count-multi"></p>
+        </header>
+        <ol class="news-list" id="news-list-multi"></ol>
+        <p class="column-error" id="error-multi" hidden></p>
+      </section>
+    </div>
+
+    <section class="error-card" id="error-card" hidden>
+      <h2>불러오기 실패</h2>
+      <p id="error-message"></p>
+      <p class="error-hint">
+        터미널에서 <code>node server.js</code>로 서버를 실행했는지 확인하세요.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p id="footer-meta">데이터 출처: Google News RSS</p>
+    </footer>
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

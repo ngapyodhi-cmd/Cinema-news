@@ -1,0 +1,37 @@
+---
+pid: 22436
+cwd: |
+  C:\Users\bc
+---
+PS C:\Users\bc> cd /d C:\Users\bc\.cursor\projects\empty-window
+Set-Location : 'C:\Users\bc\.cursor\projects\empty-window' 인수를 허용하는 위치 매개 변수를 찾을   
+수 없습니다.
+위치 줄:1 문자:1
++ cd /d C:\Users\bc\.cursor\projects\empty-window
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Set-Location], ParameterBindingException       
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.SetLocati  
+   onCommand
+
+PS C:\Users\bc> cd C:\Users\bc\.cursor\projects\empty-window
+PS C:\Users\bc\.cursor\projects\empty-window> node server.js
+영화관 뉴스 앱: http://localhost:3456
+PS C:\Users\bc\.cursor\projects\empty-window> node server.js
+영화관 뉴스 앱: http://localhost:3456
+PS C:\Users\bc\.cursor\projects\empty-window> node server.js
+영화관 뉴스 앱: http://localhost:3456
+PS C:\Users\bc\.cursor\projects\empty-window> node server.js
+영화관 뉴스 앱: http://localhost:3456
+PS C:\Users\bc\.cursor\projects\empty-window> git init
+git : 'git' 용어가 cmdlet, 함수, 스크립트 파일 또는 실행할 수 있는 프로그램 이름으로 인식되지 않습
+니다. 이름이 정확한지 확인하고 경로가 포함된 경우 경로가 올바른지 검증한 다음 다시 시도하십시오.
+위치 줄:1 문자:1
++ git init
++ ~~~
+    + CategoryInfo          : ObjectNotFound: (git:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+PS C:\Users\bc\.cursor\projects\empty-window> 
+ *  History restored 
+
+PS C:\Users\bc> 

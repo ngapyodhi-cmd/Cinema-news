@@ -1,0 +1,11 @@
+---
+pid: 29380
+cwd: |
+  C:\Users\bc
+---
+PS C:\Users\bc> cd "C:\Users\bc\.cursor\projects\empty-window"
+PS C:\Users\bc\.cursor\projects\empty-window> git init
+Initialized empty Git repository in C:/Users/bc/.cursor/projects/empty-window/.git/
+PS C:\Users\bc\.cursor\projects\empty-window> git addgit add .
+git: 'addgit' is not a git command. See 'git --help'.
+PS C:\Users\bc\.cursor\projects\empty-window> git add

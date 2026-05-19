@@ -1,0 +1,15 @@
+---
+pid: 6380
+cwd: |
+  C:\Users\bc
+---
+PS C:\Users\bc>
+ *  History restored 
+
+PS C:\Users\bc> 
+ *  History restored 
+
+PS C:\Users\bc> 
+ *  History restored 
+
+PS C:\Users\bc> 

@@ -1,0 +1,18 @@
+---
+pid: 16076
+cwd: |
+  C:\Users\bc
+---
+PS C:\Users\bc>
+ *  History restored 
+
+PS C:\Users\bc> 
+ *  History restored 
+
+PS C:\Users\bc> 
+ *  History restored 
+
+PS C:\Users\bc> 
+ *  History restored 
+
+PS C:\Users\bc> 
