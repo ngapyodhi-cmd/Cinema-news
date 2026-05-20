@@ -13,8 +13,8 @@ const FEEDS = {
   smallCinema: {
     id: "smallCinema",
     label: "작은영화관",
-    googleQuery: '"작은영화관" OR "지자체영화관" OR "공공영화관"',
-    naverQueries: ["작은영화관", "지자체영화관", "공공영화관"],
+    googleQuery: '"작은영화관"',
+    naverQueries: ["작은영화관"],
   },
   multiplex: {
     id: "multiplex",
