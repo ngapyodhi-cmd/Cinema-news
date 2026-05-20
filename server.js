@@ -10,6 +10,8 @@ const MAX_ITEMS = 20;
 const NAVER_CLIENT_ID = process.env.NAVER_CLIENT_ID;
 const NAVER_CLIENT_SECRET = process.env.NAVER_CLIENT_SECRET;
 
+const SMALL_CINEMA_PATTERN = /작은\s*영화관/i;
+
 const FEEDS = {
   smallCinema: {
     id: "smallCinema",
@@ -26,8 +28,6 @@ const FEEDS = {
     excludeSmallCinema: true,
   },
 };
-
-const SMALL_CINEMA_PATTERN = /작은\s*영화관/i;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
