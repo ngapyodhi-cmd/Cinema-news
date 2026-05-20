@@ -13,20 +13,20 @@ const FEEDS = {
   smallCinema: {
     id: "smallCinema",
     label: "작은영화관",
-    googleQuery: '"작은영화관"',
+    googleQuery: '작은영화관',
     naverQueries: ["작은영화관"],
   },
   multiplex: {
     id: "multiplex",
     label: "영화관",
     googleQuery:
-      '(멀티플렉스 OR 영화관 OR multiflex OR CGV OR 롯데시네마 OR 메가박스 OR 특별관관) -"작은영화관" -"지자체영화관" -"공공영화관"',
+      '(멀티플렉스 OR 영화관 OR CGV OR 롯데시네마 OR 메가박스 OR 특별관관) -"작은영화관"',
     naverQueries: ["멀티플렉스", "영화관", "CGV", "롯데시네마", "메가박스", "특별관"],
     excludeSmallCinema: true,
   },
 };
 
-const SMALL_CINEMA_PATTERN = /작은\s*영화관|지자체\s*영화관|공공\s*영화관/i;
+const SMALL_CINEMA_PATTERN = /작은\s*영화관/i;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
