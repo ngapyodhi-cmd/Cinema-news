@@ -22,7 +22,7 @@ const FEEDS = {
     label: "영화관",
     googleQuery:
       '(멀티플렉스 OR 영화관 OR CGV OR 롯데시네마 OR 메가박스 OR 특별관) -"작은영화관" -"예능" -"방송"',
-    naverQueries: ["멀티플렉스 not 예능 not 방송", "영화관 not 예능 not 작은영화관관", "CGV", "롯데시네마", "메가박스", "특별관"],
+    naverQueries: ["멀티플렉스 not 예능 not 방송", "영화관 not 예능 not 작은영화관", "CGV", "롯데시네마", "메가박스", "특별관"],
     excludeSmallCinema: true,
   },
 };
